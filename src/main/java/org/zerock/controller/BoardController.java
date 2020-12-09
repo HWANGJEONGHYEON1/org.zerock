@@ -30,8 +30,12 @@ public class BoardController {
     public String register(BoardVO board, RedirectAttributes rttr){
         log.info("register" + board.toString());
         service.register(board);
-        rttr.addFlashAttribute("resutl", board.getBno());
+        rttr.addFlashAttribute("result", board.getBno());
         return "redirect:/board/list";
+    }
+    @GetMapping("/register")
+    public void register(){
+
     }
 
     @GetMapping("/get")

@@ -9,8 +9,24 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-        <!-- Main Content -->
-    <%@include file="../includes/header.jsp"%>
+<%@include file="../includes/header.jsp"%>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-label="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body"> 처리가 완료되었습니다.</div>
+            <div class="modal-footer">
+                <button type="buttton" class="btn btn-dark" data-dismiss="modal">close</button>
+                <button type="button" class="btn btn-primary">save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
                 <!-- Page Heading -->
@@ -57,3 +73,20 @@
         <!-- End of Main Content -->
 
      <%@include file="../includes/footer.jsp"%>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        let result = '<c:out value="${result}" />';
+        console.log(result);
+        checkModal(result);
+
+        function checkModal(result) {
+            if(result == '') return ;
+
+            if(parseInt(result)>0) $(".modal-body").html('게시글 '+ parseInt(result) + "번이 등록 되었습니다.");
+
+            $("#myModal").modal('show');
+            console.log("# check");
+        }
+    })
+</script>
