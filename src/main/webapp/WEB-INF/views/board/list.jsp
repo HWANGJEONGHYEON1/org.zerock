@@ -5,7 +5,7 @@
   Time: 11:21 오후
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -22,7 +22,7 @@
             <div class="modal-body"> 처리가 완료되었습니다.</div>
             <div class="modal-footer">
                 <button type="buttton" class="btn btn-dark" data-dismiss="modal">close</button>
-                <button type="button" class="btn btn-primary">save changes</button>
+                <button type="button" id="reBtn" class="btn btn-primary">save changes</button>
             </div>
         </div>
     </div>
@@ -54,8 +54,11 @@
                                 </thead>
                                <c:forEach items="${list}" var="board">
                                    <tr>
-                                       <td><c:out value="${board.bno}" /></td>
-                                       <td><c:out value="${board.title}" /></td>
+                                       <td><c:out value="${board.bno}"/></td>
+                                       <td><a href="/board/get?bno=<c:out value="${board.bno}"/>"><c:out value="${board.title}" /></a></td>
+
+
+
                                        <td><c:out value="${board.writer}" /></td>
                                        <td><fmt:formatDate value="${board.regDate}" pattern="yyyy-mm-dd" /></td>
                                        <td><fmt:formatDate value="${board.updateDate}" pattern="yyyy-mm-dd" /></td>
@@ -77,16 +80,21 @@
 <script type="text/javascript">
     $(document).ready(function(){
         let result = '<c:out value="${result}" />';
-        console.log(result);
         checkModal(result);
-
+        history.replaceState({},null,null);
         function checkModal(result) {
-            if(result == '') return ;
+            if(result == '' || history.state==null) return ;
 
             if(parseInt(result)>0) $(".modal-body").html('게시글 '+ parseInt(result) + "번이 등록 되었습니다.");
 
             $("#myModal").modal('show');
-            console.log("# check");
+
+
         }
+
+        $("#reBtn").on("click", function(){
+            self.location = "/board/register";
+        });
+
     })
 </script>

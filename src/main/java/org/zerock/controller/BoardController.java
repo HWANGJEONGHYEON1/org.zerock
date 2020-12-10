@@ -38,9 +38,9 @@ public class BoardController {
 
     }
 
-    @GetMapping("/get")
+    @GetMapping({"/get","/modify"})
     public void get(@RequestParam("bno") Long bno, Model model){
-        log.info("/get");
+        log.info("/get or modify");
         model.addAttribute("board", service.get(bno));
     }
 
@@ -60,7 +60,7 @@ public class BoardController {
         if(service.remove(bno)){
             rttr.addFlashAttribute("result","success");
         }
-        return "redirect:/board/remove";
+        return "redirect:/board/list";
 
     }
 
