@@ -56,15 +56,25 @@
                                    <tr>
                                        <td><c:out value="${board.bno}"/></td>
                                        <td><a href="/board/get?bno=<c:out value="${board.bno}"/>"><c:out value="${board.title}" /></a></td>
-
-
-
                                        <td><c:out value="${board.writer}" /></td>
                                        <td><fmt:formatDate value="${board.regDate}" pattern="yyyy-mm-dd" /></td>
                                        <td><fmt:formatDate value="${board.updateDate}" pattern="yyyy-mm-dd" /></td>
                                    </tr>
                                </c:forEach>
                             </table>
+                            <div class="-pull-left">
+                                <div class="pagination">
+                                    <c:if test="${pageMaker.prev}">
+                                        <li class="pagination"><a href="${pageMaker.startPage-1}">Previous</a></li>
+                                    </c:if>
+                                    <c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+                                        <li class="page-link ${pageMaker.cri.pageNum == num ? "action" : ""}"><a href="${num}">${num}</a></li>
+                                    </c:forEach>
+                                    <c:if test="${pageMaker.next}">
+                                        <li class="pagination" next><a href="${pageMaker.endPage+1}">next</a></li>
+                                    </c:if>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,6 +84,10 @@
 
         </div>
         <!-- End of Main Content -->
+<form id="actionForm" action="/board/list" method="get">
+    <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}" />
+    <input type="hidden" name="amount" value="${pageMaker.cri.amount}" />
+</form>
 
      <%@include file="../includes/footer.jsp"%>
 
@@ -94,6 +108,14 @@
 
         $("#reBtn").on("click", function(){
             self.location = "/board/register";
+        });
+
+        let actionForm = $("#actionForm");
+        $(".page-link a").on("click",function(e){
+            e.preventDefault();
+            console.log($(this).attr("href"));
+            actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+            actionForm.submit();
         });
 
     })
