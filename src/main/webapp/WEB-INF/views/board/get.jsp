@@ -40,10 +40,35 @@
                                               value="<c:out value='${board.writer}' />" readonly/>
                 </div>
                 <button data-oper="modify" class="btn btn-primary" onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">Modify</button>
-                <button data-oper="list" class="btn btn-info" onclick="location.href='/board/list'">List</button>
+                <button id="list" data-oper="list" class="btn btn-info">List</button>
             </div>
         </div>
 
     </div>
 </div>
+<form id="openForm" action="/board/modify" method="get">
+    <input type="hidden" name="bno" id="bno" value="<c:out value='${board.bno}' />" />
+    <input type="hidden" name="pageNum" id="pageNum" value="<c:out value='${cri.pageNum}' />" />
+    <input type="hidden" name="amount" id="amount" value="<c:out value='${cri.amount}' />" />
+</form>
+
+<script type="text/javascript">
+    console.log("<c:out value='${board.bno}' />")
+    console.log("<c:out value='${cri.pageNum}' />")
+    console.log("<c:out value='${cri.amount}' />")
+
+    $("#list").on("click", function(e){
+        console.log("#");
+        e.preventDefault();
+        let openForm = $("#openForm");
+        console.log(openForm);
+        console.log(document.getElementById("pageNum").value);
+        console.log(document.getElementById("amount").value);
+        openForm.attr("action", "/board/list");
+        openForm.submit();
+    })
+
+</script>
+
 <%@include file="../includes/footer.jsp"%>
+

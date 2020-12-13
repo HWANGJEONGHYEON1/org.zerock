@@ -25,9 +25,13 @@
             if(operation == 'remove'){
                 formObj.attr('action','/board/remove');
             } else if(operation == 'list'){
-                self.location = "/board/list";
-                return;
+                formObj.attr("action", "/board/list").attr("method","get");
+                formObj.empty();
+                formObj.append($("input[name='pageNum']").clone());
+                formObj.append($("input[name='amount']").clone());
+
             }
+
             formObj.submit();
 
         })
@@ -48,6 +52,8 @@
             <div class="panel-heading">Board board page</div>
             <div class="panel-body">
                 <form role="form" action="/board/modify" method="post">
+                    <input type="hidden" name="pageNum" value="'<c:out value="${pageNum}" /> '"/>
+                    <input type="hidden" name="amount" value="'<c:out value="${amount}" /> '"/>
                 <div class="form-group">
                     <label>Bno</label> <input class="form-control" name="bno"
                                               value="<c:out value='${board.bno}' />" readonly="readonly"/>
