@@ -8,6 +8,7 @@ import java.util.List;
 public interface BoardService {
     public void register(BoardVO board);
 
+    public int getTotalCount(Criteria cri);
 
     public BoardVO get(Long bno);
 

@@ -39,8 +39,8 @@
                     <label>writer</label> <input class="form-control" name="writer"
                                               value="<c:out value='${board.writer}' />" readonly/>
                 </div>
-                <button data-oper="modify" class="btn btn-primary" onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">Modify</button>
-                <button id="list" data-oper="list" class="btn btn-info">List</button>
+                <button id="btnModify" data-oper="modify" class="btn btn-primary" onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">Modify</button>
+                <button id="btnList" data-oper="list" class="btn btn-info">List</button>
             </div>
         </div>
 
@@ -57,14 +57,12 @@
     console.log("<c:out value='${cri.pageNum}' />")
     console.log("<c:out value='${cri.amount}' />")
 
-    $("#list").on("click", function(e){
-        console.log("#");
+    $("button").on("click", function(e){
         e.preventDefault();
         let openForm = $("#openForm");
-        console.log(openForm);
-        console.log(document.getElementById("pageNum").value);
-        console.log(document.getElementById("amount").value);
-        openForm.attr("action", "/board/list");
+        console.log(e.target.id);
+        if(e.target.id == 'btnList') openForm.attr("action", "/board/list");
+        else openForm.attr("action", "/board/modify");
         openForm.submit();
     })
 

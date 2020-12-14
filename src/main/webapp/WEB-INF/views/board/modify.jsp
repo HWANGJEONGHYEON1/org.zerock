@@ -14,21 +14,24 @@
 
     $(document).ready(function(){
         const formObj = $('form');
+        console.log("modify;;;;;");
+        console.log('<c:out value="${cri.pageNum}" />');
 
         $('button').on('click', function(e){
             e.preventDefault();
 
             let operation = $(this).data("oper");
+            let pageNumTag = $("input[name='pageNum']").clone();
+            let amountTag = $("input[name='amount']").clone();
 
-            console.log(operation);
-
-            if(operation == 'remove'){
+            if(operation === 'remove'){
                 formObj.attr('action','/board/remove');
-            } else if(operation == 'list'){
+            } else if(operation === 'list'){
+
                 formObj.attr("action", "/board/list").attr("method","get");
                 formObj.empty();
-                formObj.append($("input[name='pageNum']").clone());
-                formObj.append($("input[name='amount']").clone());
+                formObj.append(pageNumTag);
+                formObj.append(amountTag);
 
             }
 
@@ -52,8 +55,8 @@
             <div class="panel-heading">Board board page</div>
             <div class="panel-body">
                 <form role="form" action="/board/modify" method="post">
-                    <input type="hidden" name="pageNum" value="'<c:out value="${pageNum}" /> '"/>
-                    <input type="hidden" name="amount" value="'<c:out value="${amount}" /> '"/>
+                    <input type="hidden" name="pageNum" value="<c:out value="${cri.pageNum}" /> "/>
+                    <input type="hidden" name="amount" value="<c:out value="${cri.amount}" /> "/>
                 <div class="form-group">
                     <label>Bno</label> <input class="form-control" name="bno"
                                               value="<c:out value='${board.bno}' />" readonly="readonly"/>
@@ -72,7 +75,7 @@
                 </div>
                 <button data-oper="modify" class="btn btn-primary" >Modify</button>
                 <button data-oper="remove" class="btn btn-danger" >Delete</button>
-                <button data-oper="list" class="btn btn-info" onclick="location.href='/board/list'">List</button>
+                <button data-oper="list" class="btn btn-info">List</button>
                 </form>
             </div>
         </div>
