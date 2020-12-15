@@ -24,7 +24,7 @@ public class Criteria {
     }
 
     public String[] getTypeArr(){
-        return type == null ? new String[] : type.split("");
+        return type == null ? new String[]{} : type.split("");
     }
 
 }
