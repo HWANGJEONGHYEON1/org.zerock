@@ -23,6 +23,8 @@
             let operation = $(this).data("oper");
             let pageNumTag = $("input[name='pageNum']").clone();
             let amountTag = $("input[name='amount']").clone();
+            let keywordTag = $("input[name='keyword']").clone();
+            let typeTag = $("input[name='type']").clone();
 
             if(operation === 'remove'){
                 formObj.attr('action','/board/remove');
@@ -32,6 +34,8 @@
                 formObj.empty();
                 formObj.append(pageNumTag);
                 formObj.append(amountTag);
+                formObj.append(keywordTag);
+                formObj.append(typeTag)
 
             }
 
@@ -57,6 +61,8 @@
                 <form role="form" action="/board/modify" method="post">
                     <input type="hidden" name="pageNum" value="<c:out value="${cri.pageNum}" /> "/>
                     <input type="hidden" name="amount" value="<c:out value="${cri.amount}" /> "/>
+                    <input type="hidden" name="keyword" value="<c:out value="${cri.keyword}" /> "/>
+                    <input type="hidden" name="type" value="<c:out value="${cri.type}" /> "/>
                 <div class="form-group">
                     <label>Bno</label> <input class="form-control" name="bno"
                                               value="<c:out value='${board.bno}' />" readonly="readonly"/>

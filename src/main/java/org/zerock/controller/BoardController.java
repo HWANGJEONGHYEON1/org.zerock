@@ -56,8 +56,10 @@ public class BoardController {
         }
         rttr.addAttribute("amount",cri.getAmount());
         rttr.addAttribute("pageNum",cri.getPageNum());
+        rttr.addAttribute("keyword", cri.getKeyword());
+        rttr.addAttribute("type",cri.getType());
 
-        return "redirect:/board/list";
+        return "redirect:/board/list" ;
     }
 
     @PostMapping("/remove")
@@ -68,6 +70,8 @@ public class BoardController {
         }
         rttr.addAttribute("amount",cri.getAmount());
         rttr.addAttribute("pageNum",cri.getPageNum());
+        rttr.addAttribute("keyword", cri.getKeyword());
+        rttr.addAttribute("type",cri.getType());
         return "redirect:/board/list";
 
     }

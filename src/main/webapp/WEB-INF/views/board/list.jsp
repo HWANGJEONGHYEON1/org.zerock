@@ -5,7 +5,6 @@
   Time: 11:21 오후
   To change this template use File | Settings | File Templates.
 --%>
-
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -62,6 +61,25 @@
                                    </tr>
                                </c:forEach>
                             </table>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form id="searchForm" action="/board/list" method="get">
+                                        <select name="type">
+                                            <option value="<c:out value='${pageMaker.cri.type eq null ? "selected" : ""}' />">--</option>
+                                            <option value="<c:out value='${pageMaker.cri.type eq "T" ? "selected" : ""}' />">제목</option>
+                                            <option value="<c:out value='${pageMaker.cri.type eq "C" ? "selected" : ""}' />">내용</option>
+                                            <option value="<c:out value='${pageMaker.cri.type eq "W" ? "selected" : ""}' />">작성자</option>
+                                            <option value="<c:out value='${pageMaker.cri.type eq "TC" ? "selected" : ""}' />">제목 또는 내용</option>
+                                            <option value="<c:out value='${pageMaker.cri.type eq "TW" ? "selected" : ""}' />">제목 또는 작성자</option>
+                                            <option value="<c:out value='${pageMaker.cri.type eq "TWC" ? "selected" : ""}' />">제목 또는 내용 또는 작성</option>
+                                        </select>
+                                        <input type="text" name="keyword" value="${pageMaker.cri.keyword}" />
+                                        <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}" />
+                                        <input type="hidden" name="amount" value="${pageMaker.cri.amount}" />
+                                        <button class="btn btn-primary">Search</button>
+                                    </form>
+                                </div>
+                            </div>
                             <div class="-pull-left">
                                 <div class="pagination">
                                     <c:if test="${pageMaker.prev}">
@@ -87,6 +105,8 @@
 <form id="actionForm" action="/board/list" method="get">
     <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}" />
     <input type="hidden" name="amount" value="${pageMaker.cri.amount}" />
+    <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}" />
+    <input type="hidden" name="type" value="${pageMaker.cri.type}" />
 </form>
 
      <%@include file="../includes/footer.jsp"%>
@@ -124,6 +144,25 @@
             actionForm.append("<input type='hidden' name='bno' value='"+$(this).attr('href')+"' />");
             actionForm.attr("action", "/board/get");
             actionForm.submit();
+        });
+
+        let searchForm = $("#searchForm");
+
+        $("#searchForm button").on("click", function(e){
+
+            if(!searchForm.find("option:selected").val()){
+                alert('검색종류를 선택하세요');
+                return false;
+            }
+
+            if(!searchForm.find("input[name='keyword']").val()){
+                alert('키워드를 입력하세요');
+                return false;
+            }
+            searchForm.find("input[name='pageNum']").val("1");
+            e.preventDefault();
+
+            searchForm.submit();
         })
 
     })
