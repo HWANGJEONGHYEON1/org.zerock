@@ -8,6 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<script type="text/javascript" src="/resources/js/reply.js"></script>
 <%@include file="../includes/header.jsp"%>
 
 <div class="row">
@@ -53,10 +54,16 @@
 </form>
 
 <script type="text/javascript">
-    console.log("<c:out value='${board.bno}' />")
-    console.log("<c:out value='${cri.pageNum}' />")
-    console.log("<c:out value='${cri.amount}' />")
-
+    console.log("=========");
+    console.log("JS TEST");
+    let bnoValue = '<c:out value="${board.bno}" />';
+    console.log(bnoValue);
+    replyService.add(
+        {reply: "JS Test", replyer: "tester", bno:bnoValue},
+        function (result){
+            alert("Result : " + result);
+        }
+    )
     $("button").on("click", function(e){
         e.preventDefault();
         let openForm = $("#openForm");
