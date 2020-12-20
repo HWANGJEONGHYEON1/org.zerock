@@ -7,9 +7,52 @@
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<script type="text/javascript" src="/resources/js/reply.js"></script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../includes/header.jsp"%>
+<script type="text/javascript" src="/resources/js/reply.js"></script>
+<script type="text/javascript">
+    console.log("=========");
+
+    $(document).ready(function(){
+        let bnoValue = '<c:out value="${board.bno}" />';
+        console.log(replyService);
+        // replyService.add(
+        //     {reply: "JS Test", replyer: "tester", bno:bnoValue},
+        //     function (result){
+        //         alert("Result : " + result);
+        //     }
+        // );
+        // replyService.getList({bno:bnoValue,page:1}, function(list){
+        //     for( let i = 0 ; i < list.length || 0 ; i++){
+        //         console.log(list[i]);
+        //     }
+        // })
+
+        // replyService.remove(21, function(count){
+        //     console.log(count);
+        //
+        //     if(count === "success") {
+        //         alert("Removed");
+        //     }
+        // }, function (err) {
+        //     alert("err.." + err);
+        // });
+
+        // replyService.update({
+        //     rno : 22,
+        //     bno : bnoValue,
+        //     reply : "modify reply - kakao developer"
+        // }, function(result){
+        //     alert('수정완료');
+        //     }
+        // )
+
+        replyService.get(22, function(data){
+            console.log(data);
+        })
+    });
+</script>
+
 
 <div class="row">
 
@@ -54,16 +97,6 @@
 </form>
 
 <script type="text/javascript">
-    console.log("=========");
-    console.log("JS TEST");
-    let bnoValue = '<c:out value="${board.bno}" />';
-    console.log(bnoValue);
-    replyService.add(
-        {reply: "JS Test", replyer: "tester", bno:bnoValue},
-        function (result){
-            alert("Result : " + result);
-        }
-    )
     $("button").on("click", function(e){
         e.preventDefault();
         let openForm = $("#openForm");
