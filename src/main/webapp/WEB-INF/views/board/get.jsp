@@ -52,6 +52,9 @@
             console.log("showlist " ,page );
 
             replyService.getList({bno:bnoValue,page: page || 1}, function(replyCnt,list){
+                console.log("####")
+                console.log(replyCnt);
+                console.log(list);
                 let str = [];
 
                 if(page == -1 ){
@@ -103,6 +106,7 @@
             }
 
             replyService.add(reply, function(result){
+                console.log("add " + reply);
                 alert(result);
 
                 modal.find("input").val("");
@@ -142,6 +146,7 @@
         modalModBtn.on("click", function(e){
             let reply = {rno:modal.data("rno"), reply : modalInputReply.val()}
             replyService.update(reply, function(result){
+                console.log("mod " + reply);
                 alert(result);
                 modal.modal("hide");
                 showList(pageNum);
@@ -152,7 +157,7 @@
         })
 
         let pageNum = -1;
-        let replyPageFooter = $('card-footer');
+        let replyPageFooter = $('.replyfooter');
 
         function showReplyPage(replyCnt){
             let endNum = Math.ceil(pageNum / 10.0) *10;
@@ -162,7 +167,7 @@
             let next = false;
 
             if(endNum * 1 >= replyCnt){
-                endNum = Math.ceil(replyCnt/10/0);
+                endNum = Math.ceil(replyCnt/10.0);
             }
             if(endNum * 10 < replyCnt){
                 next = true;
@@ -171,16 +176,16 @@
             let str = [];
             str.push("<ul class = 'pagination -pull-right' >");
             if(prev){
-                str.push("<li class='page-item'><a class='page-link' href='"+ (startNum-1)+"'> Previous </a></li>");
+                str.push("<li class='pagination'><a class='page-link' href='"+ (startNum-1)+"'> Previous </a></li>");
             }
 
             for(let i = startNum ; i <= endNum ; i++){
                 let active = pageNum == i ? "active" : "";
-                str.push("<li class='page-item "+active+" '> <a class='page-link' href='"+i+"'> "+i+" </a></li>");
+                str.push("<li class='page-link "+active+" '> <a href='"+i+"'> "+i+" </a></li>");
             }
 
             if(next){
-                str.push("<li class='page-item'><a class='page-link' href='"+ (endNum+1)+"'> Next </a></li>");
+                str.push("<li class='pagination'><a href='"+ (endNum+1)+"'> Next </a></li>");
             }
 
             str.push("</ul></div>");
@@ -188,7 +193,7 @@
             replyPageFooter.html(str);
         }
 
-        replyPageFooter.on("click" , function(e){
+        replyPageFooter.on("click", "li a", function(e){
             e.preventDefault();
             console.log("pageClick");
 
@@ -254,7 +259,7 @@
                         <p>Goooood JOOOooooooooob !</p>
                     </li>
                 </ul>
-                <div class="card-footer"></div>
+                <div class="card-footer replyfooter"></div>
             </div>
         </div>
     </div>
