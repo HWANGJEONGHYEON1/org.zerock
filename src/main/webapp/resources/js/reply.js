@@ -10,9 +10,11 @@ var replyService = (function(){
             data : JSON.stringify(reply),
             contentType : "application/json; charset=utf-8",
             success : function(result, status, xhr) {
+                console.log("success")
                 if(callback) callback(result);
             },
             error : function(xhr, status, er){
+                console.log("eerrr")
                 if(error) error(er);
             }
         })

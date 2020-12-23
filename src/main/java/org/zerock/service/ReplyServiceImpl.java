@@ -1,30 +1,34 @@
 package org.zerock.service;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
+import org.zerock.mapper.BoardMapper;
 import org.zerock.mapper.ReplyMapper;
 
 import java.util.List;
 
 @Service
 @Log4j
-@AllArgsConstructor
 public class ReplyServiceImpl implements ReplyService{
 
-//    @Setter(onMethod_ = @Autowired)
-    private ReplyMapper mapper;
 
+    @Setter(onMethod_ = @Autowired)
+    private ReplyMapper mapper;
+    @Setter(onMethod_ = @Autowired)
+    private BoardMapper boardMapper;
+
+    @Transactional
     @Override
     public int register(ReplyVO vo) {
 
         log.info("Relply Service ==== Register : " +vo );
+        boardMapper.updateReplyCnt(vo.getBno(), 1);
         return mapper.insert(vo);
     }
 
@@ -40,9 +44,12 @@ public class ReplyServiceImpl implements ReplyService{
         return mapper.update(vo);
     }
 
+    @Transactional
     @Override
     public int remove(Long rno) {
+        ReplyVO vo = mapper.read(rno);
         log.info("Relply Service ==== remove : " + rno );
+        boardMapper.updateReplyCnt(vo.getBno(), -1);
         return mapper.delete(rno);
     }
 
