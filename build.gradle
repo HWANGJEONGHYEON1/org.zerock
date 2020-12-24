@@ -57,5 +57,6 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.11.RELEASE'
     compile group: 'org.springframework', name: 'spring-tx', version: '5.2.11.RELEASE'
 
+    compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
 
 }
