@@ -55,13 +55,16 @@
             let str = [];
             $(uploadResultArr).each(function(i, obj){
                 if(!obj.image){
-                    str.push("<li><image src='resources/img/undraw_profile.svg'>"+obj.fileName+"</li>");
+                    let fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uploadPath + "/s_"+obj.uuid+"_"+obj.fileName);
+                    //str.push("<li><a href='/download?fileName="+ fileCallPath +"'>" + "<img src='/resoureces/img/attach.png'>"+obj.fileName+"</a></li>");
+                    str.push("<li><img src='/resources/img/attach.png'>"+obj.fileName+"</li>");
                 } else {
                     // str.push("<li>" + obj.fileName + "</li>");
+                    console.log(obj);
                     let fileCallPath = encodeURIComponent(
                         obj.uploadPath + "/s_"+obj.uuid+"_"+obj.fileName
                     );
-                    str += "<li> <img src = '/display/fileName="+fileCallPath+"'></li>";
+                    str.push("<li> <img src='/display?fileName="+fileCallPath+"'></li>");
 
                 }
             });

@@ -3,6 +3,8 @@ package org.zerock.controller;
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.apache.maven.model.Model;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.zerock.domain.AttaachFileDTO;
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,6 +47,7 @@ public class UploadController {
         log.info("update ajax post");
         List<AttaachFileDTO> list = new ArrayList<>();
         File uploadPath = new File(uploadFolder,getFolder());
+        log.info("# getFolder() " +getFolder());
 
         if(!uploadPath.exists()) {
             uploadPath.mkdirs();
@@ -63,8 +67,10 @@ public class UploadController {
             try{
                 File saveFile = new File(uploadPath, uploadFileName);
                 multipartFile.transferTo(saveFile);
-                attaachFileDTO.setUploadPth(uploadFolder);
                 attaachFileDTO.setUuid(uuid.toString());
+                attaachFileDTO.setUploadPath(getFolder());
+                log.info("## UploadPath " + uploadPath);
+                log.info(uploadFileName);
                 if(checkImageType(saveFile)){
                     attaachFileDTO.setImage(true);
                     FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath,"s_" + uploadFileName));
@@ -116,5 +122,24 @@ public class UploadController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @ResponseBody
+    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(String fileName){
+        log.info("downLoad : " + fileName);
+        Resource resource = new FileSystemResource(uploadFolder+fileName);
+        log.info("resource : " + resource);
+        String resourceName = resource.getFilename();
+        log.info("resourceName " + resourceName);
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            headers.add("Content-Disposition",
+                    "attachment; filename=" + new String(resourceName.getBytes("UTF-8"),"ISO-8859-1"));
+        } catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
     }
 }
