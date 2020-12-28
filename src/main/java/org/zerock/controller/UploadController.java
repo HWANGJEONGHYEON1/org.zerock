@@ -21,6 +21,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -129,11 +130,15 @@ public class UploadController {
     public ResponseEntity<org.springframework.core.io.Resource> downloadFile(String fileName){
         log.info("downLoad : " + fileName);
         Resource resource = new FileSystemResource(uploadFolder+fileName);
-        log.info("resource : " + resource);
         String resourceName = resource.getFilename();
-        log.info("resourceName " + resourceName);
+        if(!resource.exists()) return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+
+        String resourceOriginalName = resourceName.substring(resourceName.indexOf("_")+1);
+
+
         HttpHeaders headers = new HttpHeaders();
         try {
+
             headers.add("Content-Disposition",
                     "attachment; filename=" + new String(resourceName.getBytes("UTF-8"),"ISO-8859-1"));
         } catch (UnsupportedEncodingException e){
@@ -141,5 +146,30 @@ public class UploadController {
         }
 
         return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/deleteFile")
+    @ResponseBody
+    public ResponseEntity<String> deleteFile(String fileName, String type) {
+        log.info("# controller " + fileName);
+        File file;
+
+        try{
+            file = new File(uploadFolder + URLDecoder.decode(fileName, "UTF-8"));
+
+            file.delete();
+
+            if( type.equals("image")){
+                String largeFileName = file.getAbsolutePath().replace("s_", "");
+                log.info("largeFileName : " + largeFileName);
+                file = new File(largeFileName);
+                file.delete();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
 }
