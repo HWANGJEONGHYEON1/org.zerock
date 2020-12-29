@@ -14,10 +14,26 @@
     $(document).ready(function(e){
         let formObj = $("form[role='form']");
 
+
         $("button[type='submit']").on("click", function(e){
 
             e.preventDefault();
-            console.log("submit clicked");
+
+            let str = [];
+            $(".uploadResult ul li").each(function(i, obj){
+                let jobj = $(obj);
+                console.dir(jobj);
+                console.log("# "+ jobj.data("path"));
+                console.log("# "+ jobj.data("uuid"));
+                console.log("# "+ jobj.data("filename"));
+                console.log("# "+ jobj.data("type"));
+                str.push("<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("fileName")+"'>");
+                str.push("<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>");
+                str.push("<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>");
+                str.push("<input type='hidden' name='attachList["+i+"].fileType' value='"+jobj.data("type")+"'>");
+            })
+            formObj.append(str).submit();
+
         })
 
         let regex = new RegExp("(.*?).(exe|sh|zip|alz)$");
@@ -45,9 +61,26 @@
 
             $(uploadResultArr).each(function(i, obj){
                 if(obj.image){
-
+                    let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+                    str += "<li data-path='"+obj.uploadPath+"' "
+                        + " data-uuid='"+obj.uuid+"' data-filename='"
+                        + obj.fileName+"' data-type='"+obj.image+"'>";
+                    str += "<div>";
+                    str += "<span> "+ obj.fileName + "</span>";
+                    str += "<button type='button' data-file=\'"+fileCallPath+"\' data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+                    str += "<img src='/display?fileName="+fileCallPath+"'>";
+                    str += "</div></li>";
                 } else {
-
+                    let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+                    let fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+                    str += "<li data-path='"+obj.uploadPath+"' "
+                        + " data-uuid='"+obj.uuid+"' data-filename='"
+                        + obj.fileName+"' data-type='"+obj.image+"'>";
+                    str += "<div>";
+                    str += "<span> "+ obj.fileName + "</span>";
+                    str += "<button type='button' data-file=\'"+fileCallPath+"\' data-type='file' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+                    str += "<img src='/resources/img/attach.png'>";
+                    str += "</div></li>";
                 }
             });
 
@@ -80,6 +113,27 @@
                     alert(e);
                 }
             });
+        });
+
+        $(".uploadResult").on("click", "button", function (e){
+            console.log("delete file");
+
+            let targetFile = $(this).data("file");
+            let type = $(this).data("type");
+            console.log("## " + targetFile);
+            console.log("## " + type);
+            let targetLi = $(this).closest("li");
+
+            $.ajax({
+                url: '/deleteFile',
+                data : {fileName : targetFile, type: type},
+                dataType : 'text',
+                type : 'POST',
+                success : function(result) {
+                    alert(result);
+                    targetLi.remove();
+                }
+            })
         })
     })
 </script>
