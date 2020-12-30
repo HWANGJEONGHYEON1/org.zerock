@@ -27,11 +27,14 @@
                 console.log("# "+ jobj.data("uuid"));
                 console.log("# "+ jobj.data("filename"));
                 console.log("# "+ jobj.data("type"));
-                str.push("<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("fileName")+"'>");
+                str.push("<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("filename")+"'>");
                 str.push("<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>");
                 str.push("<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>");
                 str.push("<input type='hidden' name='attachList["+i+"].fileType' value='"+jobj.data("type")+"'>");
-            })
+                console.log($("hidden[name='attachList0']").val());
+            });
+
+
             formObj.append(str).submit();
 
         })
