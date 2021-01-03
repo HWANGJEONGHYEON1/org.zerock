@@ -75,15 +75,14 @@ public class BoardController {
     @PostMapping("/remove")
     public String remove(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri,RedirectAttributes rttr){
         log.info(".......remove");
+        List<BoardAttachVO> attachList = service.getAttachList(bno);
+
         if(service.remove(bno)){
+            deleteFiles(attachList);
             rttr.addFlashAttribute("result","success");
         }
-        rttr.addAttribute("amount",cri.getAmount());
-        rttr.addAttribute("pageNum",cri.getPageNum());
-        rttr.addAttribute("keyword", cri.getKeyword());
-        rttr.addAttribute("type",cri.getType());
-        return "redirect:/board/list";
 
+        return "redirect:/board/list" + cri.getListLink();
     }
 
     @GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -99,17 +98,24 @@ public class BoardController {
         log.info("Controller delete attach List ");
         log.info(attachList);
 
-//        attachList.forEach(attach -> {
-//            try{
-//                //static final String uploadFolder = "/Users/hwangjeonghyeon/IdeaProjects/upload/";
-//                Path file = Paths.get("/Users/hwangjeonghyeon/IdeaProjects/upload/" + attach.getUploadPath() + "/" +
-//                        attach.getUuid() + "_" + attach.getFileName());
-//
-//                Files.deleteIfExists(file);
-//
-//                if(file)
-//            }
-//        });
+        String filePath = "/Users/hwangjeonghyeon/IdeaProjects/upload/";
+        attachList.forEach(attach -> {
+            try{
+                //static final String uploadFolder = "/Users/hwangjeonghyeon/IdeaProjects/upload/";
+                Path file = Paths.get("/Users/hwangjeonghyeon/IdeaProjects/upload/" + attach.getUploadPath() + "/" +
+                        attach.getUuid() + "_" + attach.getFileName());
+
+                Files.deleteIfExists(file);
+
+                if(Files.probeContentType(file).startsWith("image")) {
+                    Path thumbNail = Paths.get(filePath+attach.getUploadPath()+"\\s_" + attach.getUuid() + "_" + attach.getFileName() );
+                    Files.delete(thumbNail);
+
+                }
+            } catch(Exception e) {
+                log.error("delete file error " + e.getMessage());
+            }
+        });
     }
 
 }
