@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = "org.zerock.service")
 @ComponentScan(basePackages = "org.zerock.aop")
 @ComponentScan(basePackages = "org.zerock.task")
+@ComponentScan(basePackages = "org.zerock.security")
 @MapperScan(basePackages = {"org.zerock.mapper"})
 @EnableAspectJAutoProxy
 @EnableScheduling

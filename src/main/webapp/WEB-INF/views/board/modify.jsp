@@ -8,7 +8,7 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@include file="../includes/header.jsp"%>
 <script type="text/javascript">
 
@@ -97,6 +97,7 @@
             <div class="panel-heading">Board board page</div>
             <div class="panel-body">
                 <form role="form" action="/board/modify" method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <input type="hidden" name="pageNum" value="<c:out value="${cri.pageNum}" /> "/>
                     <input type="hidden" name="amount" value="<c:out value="${cri.amount}" /> "/>
                     <input type="hidden" name="keyword" value="<c:out value="${cri.keyword}" /> "/>
@@ -117,8 +118,13 @@
                     <label>writer</label> <input class="form-control" name="writer"
                                                  value="<c:out value='${board.writer}' />" readonly/>
                 </div>
-                <button data-oper="modify" class="btn btn-primary" >Modify</button>
-                <button data-oper="remove" class="btn btn-danger" >Delete</button>
+                    <sec:authentication property="principal" var="pinfo" />
+                    <sec:authorize access="isAuthenticated()">
+                        <c:if test="${pinfo.username eq board.writer}">
+                            <button data-oper="modify" class="btn btn-primary" >Modify</button>
+                            <button data-oper="remove" class="btn btn-danger" >Delete</button>
+                        </c:if>
+                    </sec:authorize>
                 <button data-oper="list" class="btn btn-info">List</button>
                 </form>
             </div>

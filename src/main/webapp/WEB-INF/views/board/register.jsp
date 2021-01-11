@@ -8,6 +8,7 @@
 <%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@include file="../includes/header.jsp"%>
 <script type="text/javascript">
 
@@ -91,6 +92,8 @@
 
         }
 
+        let csrfHeaderName = "$(_csrf.headerName)";
+        let csrfTokenName = $("_csrf.token");
         $("input[type='file']").change(function (e){
             let formData = new FormData();
             let inputFile = $("input[name='uploadFile']");
@@ -105,6 +108,9 @@
                 url: '/uploadAjaxAction',
                 processData: false,
                 contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeaderName, csrfTokenName);
+                },
                 data : formData,
                 type : 'POST',
                 dataType: 'json',
@@ -130,6 +136,9 @@
             $.ajax({
                 url: '/deleteFile',
                 data : {fileName : targetFile, type: type},
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(csrfHeaderName,csrfTokenName);
+                },
                 dataType : 'text',
                 type : 'POST',
                 success : function(result) {
@@ -152,6 +161,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <form role="form" action="/board/register" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <div class="form-group">
                             <label>Title</label> <input class="form-control" name="title">
                         </div>
@@ -162,7 +172,7 @@
                         <div class="form-group">
                             <label>Writer </label><input class="form-control" name="writer">
                         </div>
-                            <button type="submit" class="btn-primary">Submit</button>
+                            <button type="submit" class="btn-primary" value="<sec:authentication property="pricipal.username"/>" readonly="readonly"> Submit</button>
                             <button type="reset" class="btn-dark">Reset</button>
                     </form>
                 </div>

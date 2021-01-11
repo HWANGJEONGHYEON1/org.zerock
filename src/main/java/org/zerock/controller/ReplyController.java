@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
-import org.zerock.mapper.ReplyMapper;
 import org.zerock.service.ReplyService;
-import sun.security.x509.DeltaCRLIndicatorExtension;
 
-import java.util.List;
 
 @RequestMapping("/replies/")
 @RestController

@@ -3,6 +3,7 @@ package org.zerock.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 @ComponentScan(basePackages = {"org.zerock.controller" , "org.zerock.exception"})
 @EnableWebMvc
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class ServletConfig  implements WebMvcConfigurer {
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry)  {

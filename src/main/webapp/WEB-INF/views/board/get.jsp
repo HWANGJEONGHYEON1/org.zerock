@@ -7,6 +7,7 @@
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../includes/header.jsp"%>
 <style>
@@ -166,6 +167,15 @@
         let modalRemoveBtn = $("#modalRemoveBtn");
         let modalRegisterBtn = $("#modalRegisterBtn");
 
+        let replyer = null;
+
+        <sec:authorize access="isAuthenticated()">
+            replyer = '<sec:authentication property="pricipal.username" />';
+        </sec:authorize>
+
+        let csrfHeaderName = "${_csrf.headerName}";
+        let csrfTokenValue = "${_csrf.token}";
+
         $("#addReplyBtn").on("click", function(e){
             modal.find("input").val("");
             modalInputReplyDate.closest("div").hide();
@@ -173,6 +183,10 @@
 
             $(".modal").modal("show");
         });
+
+        $(document).ajaxSend(function(e,xhr,options){
+            xhr.setRequestHeader(csrfHeaderName,csrfTokenValue);
+        })
 
         modalRegisterBtn.on("click", function(e){
             let reply = {
@@ -195,6 +209,21 @@
         modalRemoveBtn.on("click", function (e){
             let rno = modal.data("rno");
             console.log(rno);
+
+            if(!replyer) {
+                alert('로그인 후 삭제가 가능합니다');
+                modal.modal("hide");
+                return ;
+            }
+
+            let originalReplyer = modalInputReplyer.val();
+            console.log("# original replyer", originalReplyer);
+
+            if(replyer != originalReplyer){
+                alert('자신이 작성한 댓글맡 삭제가 가능합니다');
+                modal.modal('hide');
+                return;
+            }
             replyService.remove(rno, function(result){
                 alert(result);
                 modal.modal("hide");
@@ -220,7 +249,16 @@
         });
 
         modalModBtn.on("click", function(e){
+            let originalReplyer = modalInputReplyer.val();
             let reply = {rno:modal.data("rno"), reply : modalInputReply.val()}
+            if(!replyer) {
+                alert('로그인 후 가능합니다.');
+                modal.modal("hide");
+                return ;
+            }
+
+            console.log("original repleyer", originalReplyer);
+
             replyService.update(reply, function(result){
                 console.log("mod " + reply);
                 alert(result);
@@ -357,7 +395,13 @@
                     <label>writer</label> <input class="form-control" name="writer"
                                               value="<c:out value='${board.writer}' />" readonly/>
                 </div>
-                <button id="btnModify" data-oper="modify" class="btn btn-primary" onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">Modify</button>
+                <sec:authentication property="principal" var="prinfo" />
+
+                <sec:authorize access="isAuthenticated()">
+                    <c:if test="${pinfo.username eq board.writer}">
+                        <button id="btnModify" data-oper="modify" class="btn btn-primary" onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">Modify</button>
+                    </c:if>
+                </sec:authorize>
                 <button id="btnList" data-oper="list" class="btn btn-info">List</button>
             </div>
         </div>
@@ -384,7 +428,9 @@
         <div class="card">
             <div class="card-header">
                 <i class="fa fa-comments fa-fw"></i>Reply
-                <button id="addReplyBtn" class="btn btn-primary btn-sm">New Reply</button>
+                <sec:authorize access="isAuthenticated()">
+                    <button id="addReplyBtn" class="btn btn-primary btn-sm">New Reply</button>
+                </sec:authorize>
             </div>
             <div class="card-body">
                 <ul class="-reply">

@@ -6,6 +6,8 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import java.util.List;
 @Log4j
 @RequestMapping("/board/*")
 @AllArgsConstructor
+
 public class BoardController {
     private BoardService service;
 
@@ -39,8 +42,10 @@ public class BoardController {
 
     @PostMapping("/register")
     public String register(BoardVO board, RedirectAttributes rttr){
-        log.info("register" + board.toString());
+        log.info("register Contorller = " + board);
+
         if(board.getAttachList() != null) board.getAttachList().forEach(attach -> log.info(attach));
+        log.info("=========");
         service.register(board);
         rttr.addFlashAttribute("result", board.getBno());
         return "redirect:/board/list";
